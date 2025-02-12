@@ -1,0 +1,8 @@
+# dependencies
+/node_modules
+/server
+.eslistrc.js
+.prettierrc
+
+# production
+/build

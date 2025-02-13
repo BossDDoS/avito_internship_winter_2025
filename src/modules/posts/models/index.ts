@@ -1,0 +1,1 @@
+export { postSlice } from './slice';

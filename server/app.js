@@ -1,14 +1,20 @@
-const express = require("express");
-const bodyParser = require("body-parser");
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const ItemTypes = {
-  REAL_ESTATE: "Недвижимость",
-  AUTO: "Авто",
-  SERVICES: "Услуги",
+  REAL_ESTATE: 'Недвижимость',
+  AUTO: 'Авто',
+  SERVICES: 'Услуги',
+};
+
+let corsOptions = {
+  origin: ['http://localhost:3000'],
 };
 
 const app = express();
 app.use(bodyParser.json());
+app.use(cors(corsOptions));
 
 // In-memory хранилище для объявлений
 let items = [];
@@ -21,32 +27,32 @@ const makeCounter = () => {
 const itemsIdCounter = makeCounter();
 
 // Создание нового объявления
-app.post("/items", (req, res) => {
+app.post('/items', (req, res) => {
   const { name, description, location, type, ...rest } = req.body;
 
   // Validate common required fields
   if (!name || !description || !location || !type) {
-    return res.status(400).json({ error: "Missing required common fields" });
+    return res.status(400).json({ error: 'Missing required common fields' });
   }
 
   switch (type) {
     case ItemTypes.REAL_ESTATE:
       if (!rest.propertyType || !rest.area || !rest.rooms || !rest.price) {
-        return res.status(400).json({ error: "Missing required fields for Real estate" });
+        return res.status(400).json({ error: 'Missing required fields for Real estate' });
       }
       break;
     case ItemTypes.AUTO:
       if (!rest.brand || !rest.model || !rest.year || !rest.mileage) {
-        return res.status(400).json({ error: "Missing required fields for Auto" });
+        return res.status(400).json({ error: 'Missing required fields for Auto' });
       }
       break;
     case ItemTypes.SERVICES:
       if (!rest.serviceType || !rest.experience || !rest.cost) {
-        return res.status(400).json({ error: "Missing required fields for Services" });
+        return res.status(400).json({ error: 'Missing required fields for Services' });
       }
       break;
     default:
-      return res.status(400).json({ error: "Invalid type" });
+      return res.status(400).json({ error: 'Invalid type' });
   }
 
   const item = {
@@ -63,43 +69,43 @@ app.post("/items", (req, res) => {
 });
 
 // Получение всех объявлений
-app.get("/items", (req, res) => {
+app.get('/items', (req, res) => {
   res.json(items);
 });
 
 // Получение объявления по его id
-app.get("/items/:id", (req, res) => {
+app.get('/items/:id', (req, res) => {
   const item = items.find((i) => i.id === parseInt(req.params.id, 10));
   if (item) {
     res.json(item);
   } else {
-    res.status(404).send("Item not found");
+    res.status(404).send('Item not found');
   }
 });
 
 // Обновление объявления по его id
-app.put("/items/:id", (req, res) => {
+app.put('/items/:id', (req, res) => {
   const item = items.find((i) => i.id === parseInt(req.params.id, 10));
   if (item) {
     Object.assign(item, req.body);
     res.json(item);
   } else {
-    res.status(404).send("Item not found");
+    res.status(404).send('Item not found');
   }
 });
 
 // Удаление объявления по его id
-app.delete("/items/:id", (req, res) => {
+app.delete('/items/:id', (req, res) => {
   const itemIndex = items.findIndex((i) => i.id === parseInt(req.params.id, 10));
   if (itemIndex !== -1) {
     items.splice(itemIndex, 1);
     res.status(204).send();
   } else {
-    res.status(404).send("Item not found");
+    res.status(404).send('Item not found');
   }
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

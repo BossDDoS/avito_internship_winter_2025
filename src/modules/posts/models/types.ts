@@ -1,0 +1,31 @@
+export type Post = EstatePost | AutoPost | ServicesPost;
+
+export interface BasePost {
+  id: string;
+  name: string;
+  description: string;
+  location: string;
+  type: string;
+  image?: string;
+}
+
+export interface EstatePost extends BasePost {
+  propertyType?: string;
+  area?: number;
+  rooms?: number;
+  price?: number;
+}
+
+export interface AutoPost extends BasePost {
+  brand?: string;
+  model?: string;
+  year?: number;
+  mileage?: number;
+}
+
+export interface ServicesPost extends BasePost {
+  serviceType?: string;
+  experience?: number;
+  cost?: number;
+  workSchedule?: string;
+}

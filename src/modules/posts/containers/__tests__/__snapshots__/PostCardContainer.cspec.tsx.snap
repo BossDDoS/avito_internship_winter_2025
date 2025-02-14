@@ -1,0 +1,73 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PostCardContainer component To match snapshot 1`] = `
+<div>
+  <div
+    class="ant-card ant-card-bordered sc-FEMpB cuAMPP css-dev-only-do-not-override-1yacf91"
+  >
+    <div
+      class="ant-card-head"
+    >
+      <div
+        class="ant-card-head-wrapper"
+      >
+        <div
+          class="ant-card-head-title"
+        >
+          Toyota Camry
+        </div>
+      </div>
+    </div>
+    <div
+      class="ant-card-body"
+    >
+      <p>
+        Надежный автомобиль
+      </p>
+      <p>
+        <strong>
+          Местоположение:
+        </strong>
+         
+        Москва
+      </p>
+      <p>
+        <strong>
+          Тип:
+        </strong>
+         
+        Авто
+      </p>
+      <p>
+        <strong>
+          Марка:
+        </strong>
+         
+        Toyota
+      </p>
+      <p>
+        <strong>
+          Модель:
+        </strong>
+         
+        Camry
+      </p>
+      <p>
+        <strong>
+          Год выпуска:
+        </strong>
+         
+        2020
+      </p>
+      <p>
+        <strong>
+          Пробег:
+        </strong>
+         
+        15000
+         км
+      </p>
+    </div>
+  </div>
+</div>
+`;

@@ -1,7 +1,7 @@
 import { Empty } from 'antd';
 import Title from 'antd/es/typography/Title';
 import styled from 'styled-components';
-import { PostCardContainter } from './PostCardContainter';
+import { PostCardContainer } from './PostCardContainter';
 import { useGetPostsQuery } from '../models/api';
 
 export function PostListContainer() {
@@ -18,7 +18,7 @@ export function PostListContainer() {
       <StyledList>
         {posts.length ? (
           posts.map((post) => (
-            <PostCardContainter
+            <PostCardContainer
               post={post}
               key={post.id}
             />

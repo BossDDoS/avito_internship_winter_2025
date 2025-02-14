@@ -2,11 +2,11 @@ import { Card } from 'antd';
 import { Post } from '../models/types';
 import styled from 'styled-components';
 
-type PostCardContainterProps = {
+export type PostCardContainerProps = {
   post: Post;
 };
 
-export function PostCardContainter({ post }: PostCardContainterProps) {
+export function PostCardContainer({ post }: PostCardContainerProps) {
   return (
     <StyledCard title={post.name}>
       <p>{post.description}</p>

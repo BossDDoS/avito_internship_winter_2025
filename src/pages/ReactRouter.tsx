@@ -12,6 +12,7 @@ export function ReactRouter() {
         <Route
           path={route.path}
           element={route?.Component ? <route.Component /> : <NotFoundPage />}
+          key={route.path}
         />
       ))}
     </Routes>

@@ -17,7 +17,41 @@ app.use(bodyParser.json());
 app.use(cors(corsOptions));
 
 // In-memory хранилище для объявлений
-let items = [];
+let items = [
+  {
+    id: 0,
+    name: 'Квартира в центре',
+    description: 'Просторная квартира в центре города',
+    location: 'Москва',
+    type: 'Недвижимость',
+    propertyType: 'Квартира',
+    area: 100,
+    rooms: 3,
+    price: 15000000,
+  },
+  {
+    id: 1,
+    name: 'Toyota Camry',
+    description: 'Надежный автомобиль',
+    location: 'Москва',
+    type: 'Авто',
+    brand: 'Toyota',
+    model: 'Camry',
+    year: 2020,
+    mileage: 15000,
+  },
+  {
+    id: 2,
+    name: 'Ремонт квартир',
+    description: 'Качественный ремонт квартир',
+    location: 'Москва',
+    type: 'Услуги',
+    serviceType: 'Ремонт',
+    experience: 5,
+    cost: 50000,
+    workSchedule: 'Пн-Пт, 9:00-18:00',
+  },
+];
 
 const makeCounter = () => {
   let count = 0;
@@ -38,17 +72,23 @@ app.post('/items', (req, res) => {
   switch (type) {
     case ItemTypes.REAL_ESTATE:
       if (!rest.propertyType || !rest.area || !rest.rooms || !rest.price) {
-        return res.status(400).json({ error: 'Missing required fields for Real estate' });
+        return res
+          .status(400)
+          .json({ error: 'Missing required fields for Real estate' });
       }
       break;
     case ItemTypes.AUTO:
       if (!rest.brand || !rest.model || !rest.year || !rest.mileage) {
-        return res.status(400).json({ error: 'Missing required fields for Auto' });
+        return res
+          .status(400)
+          .json({ error: 'Missing required fields for Auto' });
       }
       break;
     case ItemTypes.SERVICES:
       if (!rest.serviceType || !rest.experience || !rest.cost) {
-        return res.status(400).json({ error: 'Missing required fields for Services' });
+        return res
+          .status(400)
+          .json({ error: 'Missing required fields for Services' });
       }
       break;
     default:
@@ -96,7 +136,9 @@ app.put('/items/:id', (req, res) => {
 
 // Удаление объявления по его id
 app.delete('/items/:id', (req, res) => {
-  const itemIndex = items.findIndex((i) => i.id === parseInt(req.params.id, 10));
+  const itemIndex = items.findIndex(
+    (i) => i.id === parseInt(req.params.id, 10),
+  );
   if (itemIndex !== -1) {
     items.splice(itemIndex, 1);
     res.status(204).send();

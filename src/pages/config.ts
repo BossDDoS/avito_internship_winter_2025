@@ -1,4 +1,8 @@
-import { PostContainer, PostListContainer } from '../modules/posts';
+import {
+  PostContainer,
+  PostListContainer,
+  PostCreateContainer,
+} from '../modules/posts';
 import { NotFoundPage } from './NotFoundPage';
 
 import type { ComponentType } from 'react';
@@ -26,6 +30,11 @@ export const config: ConfigItemType[] = [
     Component: PostContainer,
     key: 'itemDetail',
     parentKey: 'list',
+  },
+  {
+    path: '/form',
+    Component: PostCreateContainer,
+    key: 'itemCreate',
   },
   {
     path: '*',

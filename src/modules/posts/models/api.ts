@@ -15,7 +15,7 @@ export const postsApi = baseApi.injectEndpoints({
     deletePost: build.mutation<object, { id: string }>({
       query: (id) => ({ url: `items/${id}`, method: 'DELETE' }),
     }),
-    addPost: build.mutation<object, { post: Post }>({
+    addPost: build.mutation<object, Post>({
       query: (post) => ({ url: `items`, method: 'POST', body: post }),
     }),
   }),

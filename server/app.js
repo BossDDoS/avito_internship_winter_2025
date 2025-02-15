@@ -53,12 +53,15 @@ let items = [
   },
 ];
 
-const makeCounter = () => {
-  let count = 0;
-  return () => count++;
-};
+// const makeCounter = () => {
+//   let count = 0;
+//   return () => count++;
+// };
 
-const itemsIdCounter = makeCounter();
+// const itemsIdCounter = makeCounter();
+const itemsIdCounter = () => {
+  return items.length > 0 ? Math.max(...items.map((i) => i.id)) + 1 : 0;
+};
 
 // Создание нового объявления
 app.post('/items', (req, res) => {

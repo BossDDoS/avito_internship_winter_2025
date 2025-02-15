@@ -25,7 +25,12 @@ export function PostListContainer() {
   return (
     <StyledContainer>
       <Title level={2}>Список объявлений</Title>
-      <Button onClick={handleCreatePostClick}>Разместить объявление</Button>
+      <Button
+        type='primary'
+        onClick={handleCreatePostClick}
+      >
+        Разместить объявление
+      </Button>
       <StyledList>
         {posts.length ? (
           posts.map((post) => (

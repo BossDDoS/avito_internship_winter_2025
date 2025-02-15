@@ -20,7 +20,7 @@ export function PostContainer() {
     (route) => route.key === 'itemDetail',
   )?.parentKey;
   const backPath =
-    config.find((route) => route.key === parentRoute)?.path || '/list';
+    config.find((route) => route.key === parentRoute)?.path || '/';
 
   const handleBackClick = () => {
     navigate(backPath);

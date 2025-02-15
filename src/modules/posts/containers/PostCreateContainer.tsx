@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Input, Select, InputNumber, Button, message } from 'antd';
 import { Post } from '../models/types';
 import { useAddPostMutation } from '../models/api';
@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { config } from 'pages/config';
 
 const { Option } = Select;
+const DRAFT_KEY = 'post_form_draft';
 
 export function PostCreateContainer() {
   const navigate = useNavigate();
@@ -13,10 +14,24 @@ export function PostCreateContainer() {
   const [category, setCategory] = useState<string>('');
   const [addPost] = useAddPostMutation();
 
+  useEffect(() => {
+    const draft = localStorage.getItem(DRAFT_KEY);
+    if (draft) {
+      const parsedDraft = JSON.parse(draft);
+      form.setFieldsValue(parsedDraft);
+      if (parsedDraft.type) setCategory(parsedDraft.type);
+    }
+  }, [form]);
+
+  const handleFormChange = () => {
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(form.getFieldsValue()));
+  };
+
   const handleSubmit = async (values: Post) => {
     try {
       await addPost(values).unwrap();
       message.success('Объявление успешно создано!');
+      localStorage.removeItem(DRAFT_KEY);
       form.resetFields();
     } catch (error) {
       console.error('Failed to submit the form:', error);
@@ -24,8 +39,14 @@ export function PostCreateContainer() {
     }
   };
 
-  const listRoute =
-    config.find((route) => route.key === 'list')?.path || '/list';
+  const clearDraft = () => {
+    localStorage.removeItem(DRAFT_KEY);
+    form.resetFields();
+    setCategory('');
+    message.success('Черновик очищен');
+  };
+
+  const listRoute = config.find((route) => route.key === 'list')?.path || '/';
 
   const handleBackClick = () => {
     navigate(listRoute);
@@ -36,7 +57,14 @@ export function PostCreateContainer() {
       form={form}
       layout='vertical'
       onFinish={handleSubmit}
+      onValuesChange={handleFormChange}
     >
+      <Button
+        type='primary'
+        onClick={handleBackClick}
+      >
+        К объявлениям
+      </Button>
       <Form.Item
         label='Название'
         name='name'
@@ -224,10 +252,10 @@ export function PostCreateContainer() {
         Создать объявление
       </Button>
       <Button
-        type='primary'
-        onClick={handleBackClick}
+        type='default'
+        onClick={clearDraft}
       >
-        К объявлениям
+        Очистить
       </Button>
     </Form>
   );

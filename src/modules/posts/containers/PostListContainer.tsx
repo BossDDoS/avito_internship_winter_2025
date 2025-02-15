@@ -15,7 +15,7 @@ export function PostListContainer() {
   return (
     <StyledContainer>
       <Title level={2}>Список объявлений</Title>
-      <Button>Добавить объявление</Button>
+      <Button>Разместить объявление</Button>
       <StyledList>
         {posts.length ? (
           posts.map((post) => (

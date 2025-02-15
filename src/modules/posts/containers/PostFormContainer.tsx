@@ -13,7 +13,7 @@ import Title from 'antd/es/typography/Title';
 const { Option } = Select;
 const DRAFT_KEY = 'post_form_draft';
 
-export function PostCreateContainer() {
+export function PostFormContainer() {
   const location = useLocation();
   const navigate = useNavigate();
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);

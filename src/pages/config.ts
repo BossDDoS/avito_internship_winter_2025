@@ -1,7 +1,7 @@
 import {
   PostContainer,
   PostListContainer,
-  PostCreateContainer,
+  PostFormContainer,
 } from '../modules/posts';
 import { NotFoundPage } from './NotFoundPage';
 
@@ -33,7 +33,7 @@ export const config: ConfigItemType[] = [
   },
   {
     path: '/form',
-    Component: PostCreateContainer,
+    Component: PostFormContainer,
     key: 'itemCreate',
   },
   {

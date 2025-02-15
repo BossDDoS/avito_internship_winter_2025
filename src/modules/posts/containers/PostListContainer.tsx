@@ -1,4 +1,5 @@
-import { Button, Empty } from 'antd';
+import { useState } from 'react';
+import { Button, Empty, Pagination } from 'antd';
 import Title from 'antd/es/typography/Title';
 import styled from 'styled-components';
 import { PostCardContainer } from './PostCardContainter';
@@ -9,12 +10,26 @@ import { config } from 'pages/config';
 export function PostListContainer() {
   const { data: posts, isLoading, isError } = useGetPostsQuery();
   const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
 
   const createRoute =
     config.find((route) => route.key === 'itemCreate')?.path || '/form';
 
   const handleCreatePostClick = () => {
     navigate(createRoute);
+  };
+
+  const getCurrentPagePosts = () => {
+    if (!posts) return [];
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    return posts.slice(startIndex, endIndex);
+  };
+
+  const handlePageChange = (page: number, pageSize?: number) => {
+    setCurrentPage(page);
+    if (pageSize) setPageSize(pageSize);
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -32,8 +47,8 @@ export function PostListContainer() {
         Разместить объявление
       </Button>
       <StyledList>
-        {posts.length ? (
-          posts.map((post) => (
+        {getCurrentPagePosts().length ? (
+          getCurrentPagePosts().map((post) => (
             <PostCardContainer
               post={post}
               key={post.id}
@@ -43,6 +58,14 @@ export function PostListContainer() {
           <Empty />
         )}
       </StyledList>
+      <Pagination
+        current={currentPage}
+        pageSize={pageSize}
+        total={posts.length}
+        onChange={handlePageChange}
+        style={{ marginTop: '20px', textAlign: 'center' }}
+        showSizeChanger={false}
+      />
     </StyledContainer>
   );
 }

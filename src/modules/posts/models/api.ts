@@ -6,14 +6,14 @@ export const postsApi = baseApi.injectEndpoints({
     getPosts: build.query<Post[], void>({
       query: () => ({ url: 'items', method: 'GET' }),
     }),
-    getPost: build.query<Post, { id: string }>({
-      query: (id) => ({ url: `items/:${id}`, method: 'GET' }),
+    getPost: build.query<Post, string>({
+      query: (id) => ({ url: `items/${id}`, method: 'GET' }),
     }),
     updatePost: build.mutation<object, { id: string }>({
-      query: (id) => ({ url: `items/:${id}`, method: 'PUT' }),
+      query: (id) => ({ url: `items/${id}`, method: 'PUT' }),
     }),
     deletePost: build.mutation<object, { id: string }>({
-      query: (id) => ({ url: `items/:${id}`, method: 'DELETE' }),
+      query: (id) => ({ url: `items/${id}`, method: 'DELETE' }),
     }),
     addPost: build.mutation<object, { post: Post }>({
       query: (post) => ({ url: `items`, method: 'POST', body: post }),

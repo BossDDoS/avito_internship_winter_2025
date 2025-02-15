@@ -7,6 +7,8 @@ type ConfigItemType = {
   path: string;
   redirectTo?: string;
   Component?: ComponentType;
+  key?: string;
+  parentKey?: string;
 };
 
 export const config: ConfigItemType[] = [
@@ -17,10 +19,13 @@ export const config: ConfigItemType[] = [
   {
     path: '/list',
     Component: PostListContainer,
+    key: 'list',
   },
   {
     path: '/item/:slug',
     Component: PostContainer,
+    key: 'itemDetail',
+    parentKey: 'list',
   },
   {
     path: '*',

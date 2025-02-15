@@ -1,4 +1,4 @@
-import { Empty } from 'antd';
+import { Button, Empty } from 'antd';
 import Title from 'antd/es/typography/Title';
 import styled from 'styled-components';
 import { PostCardContainer } from './PostCardContainter';
@@ -15,6 +15,7 @@ export function PostListContainer() {
   return (
     <StyledContainer>
       <Title level={2}>Список объявлений</Title>
+      <Button>Добавить объявление</Button>
       <StyledList>
         {posts.length ? (
           posts.map((post) => (

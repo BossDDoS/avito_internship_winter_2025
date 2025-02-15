@@ -63,7 +63,6 @@ export function PostListContainer() {
         pageSize={pageSize}
         total={posts.length}
         onChange={handlePageChange}
-        style={{ marginTop: '20px', textAlign: 'center' }}
         showSizeChanger={false}
       />
     </StyledContainer>

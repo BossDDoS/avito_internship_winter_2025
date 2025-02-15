@@ -1,13 +1,21 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useLazyGetPostQuery } from '../models/api';
-import { Button, Card } from 'antd';
+import {
+  useDeletePostMutation,
+  useGetPostsQuery,
+  useLazyGetPostQuery,
+} from '../models/api';
+import { Button, Card, message, Modal } from 'antd';
 import { config } from 'pages/config';
 
 export function PostContainer() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { slug } = useParams<{ slug: string }>();
   const [triggerGetPost, { data: post, isLoading, isError }] =
     useLazyGetPostQuery();
+  const [deletePost] = useDeletePostMutation();
+  const { refetch } = useGetPostsQuery();
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,6 +32,35 @@ export function PostContainer() {
 
   const handleBackClick = () => {
     navigate(backPath);
+  };
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleOk = async () => {
+    if (!slug) {
+      message.error('Нет идентификатора');
+      return;
+    }
+
+    try {
+      await deletePost(slug).unwrap();
+      message.success('Объявление успешно удалено');
+      refetch();
+      setTimeout(() => {
+        navigate(backPath);
+      }, 500);
+    } catch (error) {
+      message.error('Ошибка при удалении объявления');
+      console.error('Failed to delete post:', error);
+    }
+
+    setIsModalOpen(false);
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -85,7 +122,29 @@ export function PostContainer() {
           </p>
         </>
       )}
-      <Button onClick={handleBackClick}>Назад к объявлениям</Button>
+      <Button
+        type='primary'
+        onClick={handleBackClick}
+      >
+        К объявлениям
+      </Button>
+      <Button
+        danger
+        type='primary'
+        onClick={showModal}
+      >
+        Удалить
+      </Button>
+      <Modal
+        title='Подтвердите удаление поста'
+        cancelText='Нет'
+        okText='Да'
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
+        <p>Вы уверены, что хотите удалить этот пост?</p>
+      </Modal>
     </Card>
   );
 }

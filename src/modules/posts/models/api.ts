@@ -9,14 +9,14 @@ export const postsApi = baseApi.injectEndpoints({
     getPost: build.query<Post, string>({
       query: (id) => ({ url: `items/${id}`, method: 'GET' }),
     }),
+    addPost: build.mutation<object, Post>({
+      query: (post) => ({ url: `items`, method: 'POST', body: post }),
+    }),
     updatePost: build.mutation<object, { id: string }>({
       query: (id) => ({ url: `items/${id}`, method: 'PUT' }),
     }),
-    deletePost: build.mutation<object, { id: string }>({
+    deletePost: build.mutation<Post, string>({
       query: (id) => ({ url: `items/${id}`, method: 'DELETE' }),
-    }),
-    addPost: build.mutation<object, Post>({
-      query: (post) => ({ url: `items`, method: 'POST', body: post }),
     }),
   }),
 });

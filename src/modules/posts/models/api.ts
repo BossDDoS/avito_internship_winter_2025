@@ -12,8 +12,12 @@ export const postsApi = baseApi.injectEndpoints({
     addPost: build.mutation<object, Post>({
       query: (post) => ({ url: `items`, method: 'POST', body: post }),
     }),
-    updatePost: build.mutation<object, { id: string }>({
-      query: (id) => ({ url: `items/${id}`, method: 'PUT' }),
+    updatePost: build.mutation<Post, { id: string; data: Partial<Post> }>({
+      query: ({ id, data }) => ({
+        url: `items/${id}`,
+        method: 'PUT',
+        body: data,
+      }),
     }),
     deletePost: build.mutation<Post, string>({
       query: (id) => ({ url: `items/${id}`, method: 'DELETE' }),

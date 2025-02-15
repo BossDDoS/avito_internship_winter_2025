@@ -1,20 +1,40 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Input, Select, InputNumber, Button, message, Modal } from 'antd';
 import { Post } from '../models/types';
-import { useAddPostMutation, useGetPostsQuery } from '../models/api';
-import { useNavigate } from 'react-router-dom';
+import {
+  useAddPostMutation,
+  useGetPostsQuery,
+  useUpdatePostMutation,
+} from '../models/api';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { config } from 'pages/config';
+import Title from 'antd/es/typography/Title';
 
 const { Option } = Select;
 const DRAFT_KEY = 'post_form_draft';
 
 export function PostCreateContainer() {
+  const location = useLocation();
   const navigate = useNavigate();
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [form] = Form.useForm<Post>();
   const [category, setCategory] = useState<string>('');
   const { refetch } = useGetPostsQuery();
   const [addPost] = useAddPostMutation();
+  const [updatePost] = useUpdatePostMutation();
+  const [isEditing, setIsEditing] = useState(false);
+
+  const post = location.state?.post;
+
+  useEffect(() => {
+    if (post) {
+      form.setFieldsValue(post);
+      setCategory(post.type);
+      setIsEditing(true);
+    } else {
+      setIsEditing(false);
+    }
+  }, [post, form]);
 
   useEffect(() => {
     const draft = localStorage.getItem(DRAFT_KEY);
@@ -31,14 +51,23 @@ export function PostCreateContainer() {
 
   const handleSubmit = async (values: Post) => {
     try {
-      await addPost(values).unwrap();
-      message.success('Объявление успешно создано!');
+      if (isEditing && String(post?.id)) {
+        console.log('Редактирование поста:', post.id, values);
+        await updatePost({ id: post.id, data: values }).unwrap();
+        message.success('Объявление успешно обновлено!');
+      } else {
+        console.log('Создание нового поста:', values);
+        await addPost(values).unwrap();
+        message.success('Объявление успешно создано!');
+      }
+
       localStorage.removeItem(DRAFT_KEY);
       form.resetFields();
       refetch();
       setIsSuccessModalOpen(true);
       setTimeout(() => {
         setIsSuccessModalOpen(false);
+        navigate('/');
       }, 2000);
     } catch (error) {
       console.error('Ошибка при отправки формы:', error);
@@ -61,18 +90,26 @@ export function PostCreateContainer() {
 
   return (
     <>
+      <Title>
+        {isEditing ? 'Редактирование объявления' : 'Создание объявления'}
+      </Title>
       <Form
         form={form}
         layout='vertical'
         onFinish={handleSubmit}
         onValuesChange={handleFormChange}
       >
-        <Button
-          type='primary'
-          onClick={handleBackClick}
-        >
-          К объявлениям
-        </Button>
+        {!isEditing ? (
+          <Button
+            type='primary'
+            onClick={handleBackClick}
+          >
+            К объявлениям
+          </Button>
+        ) : (
+          <></>
+        )}
+
         <Form.Item
           label='Название'
           name='name'
@@ -263,7 +300,7 @@ export function PostCreateContainer() {
           type='primary'
           htmlType='submit'
         >
-          Создать объявление
+          {isEditing ? 'Сохранить изменения' : 'Создать объявление'}
         </Button>
         <Button
           type='default'
@@ -273,12 +310,11 @@ export function PostCreateContainer() {
         </Button>
       </Form>
       <Modal
-        title='Пост добавлен!'
         open={isSuccessModalOpen}
         footer={null}
         closable={false}
       >
-        <p>Ваш пост успешно добавлен!</p>
+        <p>Ваш пост успешно {isEditing ? 'обновлен' : 'добавлен'}!</p>
       </Modal>
     </>
   );

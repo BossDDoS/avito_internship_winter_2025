@@ -122,19 +122,26 @@ export function PostContainer() {
           </p>
         </>
       )}
-      <Button
-        type='primary'
-        onClick={handleBackClick}
-      >
-        К объявлениям
-      </Button>
-      <Button
-        danger
-        type='primary'
-        onClick={showModal}
-      >
-        Удалить
-      </Button>
+
+      <div>
+        <Button
+          type='primary'
+          onClick={handleBackClick}
+        >
+          К объявлениям
+        </Button>
+        <Button onClick={() => navigate('/form', { state: { post } })}>
+          Редактировать
+        </Button>
+        <Button
+          danger
+          type='primary'
+          onClick={showModal}
+        >
+          Удалить
+        </Button>
+      </div>
+
       <Modal
         title='Подтвердите удаление поста'
         cancelText='Нет'

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Button, Card, message, Modal } from 'antd';
-import Title from 'antd/es/typography/Title';
+import { Card, message } from 'antd';
 import styled from 'styled-components';
 import {
   useDeletePostMutation,
@@ -10,6 +9,9 @@ import {
 } from '../models/api';
 import { config } from 'pages/config';
 import { placeholderImages } from '../models/placeholderImages';
+import { DeleteModal } from '../components/DeleteModal';
+import { PostButtons } from '../components/PostButtons';
+import { PostDetails } from '../components/PostDetails';
 
 export function PostContainer() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -82,92 +84,19 @@ export function PostContainer() {
           />
         }
       >
-        <Title>Объявление: {post.name}</Title>
-        <p>{post.description}</p>
-        <p>
-          <strong>Местоположение:</strong> {post.location}
-        </p>
-        <p>
-          <strong>Тип:</strong> {post.type}
-        </p>
-        {post.type === 'Недвижимость' && (
-          <>
-            <p>
-              <strong>Тип недвижимости:</strong> {post.propertyType}
-            </p>
-            <p>
-              <strong>Площадь:</strong> {post.area} м²
-            </p>
-            <p>
-              <strong>Комнат:</strong> {post.rooms}
-            </p>
-            <p>
-              <strong>Цена:</strong> {post.price} ₽
-            </p>
-          </>
-        )}
-        {post.type === 'Авто' && (
-          <>
-            <p>
-              <strong>Марка:</strong> {post.brand}
-            </p>
-            <p>
-              <strong>Модель:</strong> {post.model}
-            </p>
-            <p>
-              <strong>Год выпуска:</strong> {post.year}
-            </p>
-            <p>
-              <strong>Пробег:</strong> {post.mileage} км
-            </p>
-          </>
-        )}
-        {post.type === 'Услуги' && (
-          <>
-            <p>
-              <strong>Тип услуги:</strong> {post.serviceType}
-            </p>
-            <p>
-              <strong>Опыт:</strong> {post.experience} лет
-            </p>
-            <p>
-              <strong>Стоимость:</strong> {post.cost} ₽
-            </p>
-          </>
-        )}
+        <PostDetails post={post} />
 
-        <StyledButtons>
-          <LeftBarButtons>
-            <Button
-              type='primary'
-              onClick={handleBackClick}
-            >
-              К объявлениям
-            </Button>
-            <Button onClick={() => navigate('/form', { state: { post } })}>
-              Редактировать
-            </Button>
-          </LeftBarButtons>
+        <PostButtons
+          post={post}
+          onBackClick={handleBackClick}
+          onDeleteClick={showModal}
+        />
 
-          <Button
-            danger
-            type='primary'
-            onClick={showModal}
-          >
-            Удалить
-          </Button>
-        </StyledButtons>
-
-        <Modal
-          title='Подтвердите удаление поста'
-          cancelText='Нет'
-          okText='Да'
-          open={isModalOpen}
+        <DeleteModal
+          isOpen={isModalOpen}
           onOk={handleOk}
           onCancel={handleCancel}
-        >
-          <p>Вы уверены, что хотите удалить этот пост?</p>
-        </Modal>
+        />
       </StyledCard>
     </CenteredContainer>
   );
@@ -191,26 +120,4 @@ const StyledImage = styled.img`
   height: 300px;
   object-fit: cover;
   border-radius: 10px 10px 0 0;
-`;
-
-const StyledButtons = styled.div`
-  display: flex;
-  justify-content: space-between;
-  gap: 50px;
-
-  @media (max-width: 600px) {
-    flex-direction: column;
-    gap: 20px;
-  }
-`;
-
-const LeftBarButtons = styled.div`
-  display: flex;
-  flex: 1;
-  justify-content: space-between;
-
-  @media (max-width: 600px) {
-    flex-direction: column;
-    gap: 20px;
-  }
 `;

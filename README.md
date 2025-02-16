@@ -1,46 +1,36 @@
-# Getting Started with Create React App
+# Avito tech-internship:
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Фронтенд-приложение, позволяющее просматривать список объявлений, редактировать и добавлять новые.
 
-## Available Scripts
+## Описание
 
-In the project directory, you can run:
+В приложении релизовано:
 
-### `npm start`
+- Выдача всех объявлений.
+- Пагинация с максимальным количеством объявлений на странице 5 ед.
+- Поиск объявления по ключевым словам и категориям.
+- Добавление нового объявления.
+- Возможность перейти на страницу отдельного объявления для получения дополнительной информации и редактирования.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Установка и запуск
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Склонируйте объект в рабочую папку любым удобным способом и установите зависимости проекта. Запустите проект.
 
-### `npm test`
+Один из вариантов установки и запуска проекта:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```
+git clone https://github.com/BossDDoS/avito_internship_winter_2025
+npm install --prefix server
+npm install
+npm start
+```
 
-### `npm run build`
+Установка зависимостей происходит из корня проекта
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Сложности реализации
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. Изначальное состояние непустое.
+   Предоставленный сервер не имеет возможности сохранять новые посты в базу данных (локальный файл .json, SQL), поэтому изначальное состояние уже с наличием некоторых объявлений, чтобы опробывать все функции приложения сразу.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+2. Изменена функция-присваивания id объявлениям.
+   В связи с тем, что с запуском сервера создается новый массив объявлений и id объявлений. Функция, обеспечивающая присваивание новым объявлений id, требовала доработки, так как изначально в массиве уже присутствуют данные.

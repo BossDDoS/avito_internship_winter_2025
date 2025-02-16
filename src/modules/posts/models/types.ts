@@ -1,3 +1,5 @@
+export const postTypes = ['Недвижимость', 'Авто', 'Услуги'];
+
 export interface BasePost {
   id: string;
   name: string;

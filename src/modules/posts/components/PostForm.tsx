@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Form, Input, Select, FormProps, Button } from 'antd';
 import styled from 'styled-components';
-import { Post } from '../models/types';
+import { Post, postTypes } from '../models/types';
 import { config } from 'pages/config';
 import { FormButtons } from './FormButtons';
 import { CategoryFields } from './CategoryFields';
@@ -84,9 +84,14 @@ export function PostForm({
           onChange={(value) => setCategory(value)}
           value={category}
         >
-          <Select.Option value='Недвижимость'>Недвижимость</Select.Option>
-          <Select.Option value='Авто'>Авто</Select.Option>
-          <Select.Option value='Услуги'>Услуги</Select.Option>
+          {postTypes.map((type) => (
+            <Select.Option
+              key={type}
+              value={type}
+            >
+              {type}
+            </Select.Option>
+          ))}
         </Select>
       </Form.Item>
 

@@ -9,6 +9,7 @@ import {
   useLazyGetPostQuery,
 } from '../models/api';
 import { config } from 'pages/config';
+import { placeholderImages } from '../models/placeholderImages';
 
 export function PostContainer() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -68,9 +69,19 @@ export function PostContainer() {
   if (isError) return <div>Error loading post</div>;
   if (!post) return <div>Post not found</div>;
 
+  const imageSrc =
+    post.image || placeholderImages[post.type] || placeholderImages.default;
+
   return (
     <CenteredContainer>
-      <StyledCard>
+      <StyledCard
+        cover={
+          <StyledImage
+            src={imageSrc}
+            alt={post.name}
+          />
+        }
+      >
         <Title>Объявление: {post.name}</Title>
         <p>{post.description}</p>
         <p>
@@ -173,6 +184,13 @@ const CenteredContainer = styled.div`
 const StyledCard = styled(Card)`
   width: 80%;
   max-width: 800px;
+`;
+
+const StyledImage = styled.img`
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 10px 10px 0 0;
 `;
 
 const StyledButtons = styled.div`

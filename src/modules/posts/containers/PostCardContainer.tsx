@@ -3,6 +3,7 @@ import { Button, Card } from 'antd';
 import styled from 'styled-components';
 import { config } from 'pages/config';
 import { Post } from '../models/types';
+import { placeholderImages } from '../models/placeholderImages';
 
 export type PostCardContainerProps = {
   post: Post;
@@ -10,6 +11,8 @@ export type PostCardContainerProps = {
 
 export function PostCardContainer({ post }: PostCardContainerProps) {
   const navigate = useNavigate();
+  const imageSrc =
+    post.image || placeholderImages[post.type] || placeholderImages.default;
 
   const itemPath =
     config.find((route) => route.key === 'itemDetail')?.path || '/item/:slug';
@@ -20,7 +23,15 @@ export function PostCardContainer({ post }: PostCardContainerProps) {
   };
 
   return (
-    <StyledCard title={post.name}>
+    <StyledCard
+      title={post.name}
+      cover={
+        <StyledImage
+          src={imageSrc}
+          alt={post.name}
+        />
+      }
+    >
       <div>
         <p>
           <strong>Местоположение:</strong> {post.location}
@@ -37,4 +48,11 @@ export function PostCardContainer({ post }: PostCardContainerProps) {
 const StyledCard = styled(Card)`
   flex: 1;
   margin-bottom: 20px;
+`;
+
+const StyledImage = styled.img`
+  width: 100%;
+  height: 200px;
+  padding: 20px;
+  object-fit: cover;
 `;

@@ -1,7 +1,7 @@
 import {
   PostCardContainer,
   PostCardContainerProps,
-} from '../PostCardContainter';
+} from '../PostCardContainer';
 import { render, screen } from '@testing-library/react';
 
 describe('PostCardContainer component', () => {

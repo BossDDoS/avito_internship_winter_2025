@@ -53,11 +53,9 @@ export function PostFormContainer() {
   const handleSubmit = async (values: Post) => {
     try {
       if (isEditing && String(post?.id)) {
-        console.log('Редактирование поста:', post.id, values);
         await updatePost({ id: post.id, data: values }).unwrap();
         message.success('Объявление успешно обновлено!');
       } else {
-        console.log('Создание нового поста:', values);
         await addPost(values).unwrap();
         message.success('Объявление успешно создано!');
       }

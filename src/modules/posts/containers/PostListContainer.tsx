@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Empty, Pagination, Input } from 'antd';
+import { Button, Empty, Pagination, Input, Select } from 'antd';
 import Title from 'antd/es/typography/Title';
 import styled from 'styled-components';
-import { PostCardContainer } from './PostCardContainter';
+import { PostCardContainer } from './PostCardContainer';
 import { useGetPostsQuery } from '../models/api';
 import { config } from 'pages/config';
 
@@ -11,6 +11,9 @@ export function PostListContainer() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedTypeCategory, setSelectedTypeCategory] = useState<
+    string | null
+  >(null);
   const navigate = useNavigate();
   const { data: posts, isLoading, isError } = useGetPostsQuery();
 
@@ -21,9 +24,15 @@ export function PostListContainer() {
     navigate(createRoute);
   };
 
+  const typeCategories = posts
+    ? Array.from(new Set(posts.map((post) => post.type)))
+    : [];
+
   const filteredPosts = posts
-    ? posts.filter((post) =>
-        post.name.toLowerCase().includes(searchTerm.toLowerCase()),
+    ? posts.filter(
+        (post) =>
+          post.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+          (selectedTypeCategory ? post.type === selectedTypeCategory : true),
       )
     : [];
 
@@ -51,6 +60,15 @@ export function PostListContainer() {
         placeholder='Поиск по названию'
         allowClear
         onChange={(e) => setSearchTerm(e.target.value)}
+      />
+      <Select
+        placeholder='Выберите категорию'
+        allowClear
+        onChange={(value) => setSelectedTypeCategory(value)}
+        options={typeCategories.map((category) => ({
+          value: category,
+          label: category,
+        }))}
       />
       <Button
         type='primary'

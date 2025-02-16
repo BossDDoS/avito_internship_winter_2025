@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Empty, Pagination, Input, Select } from 'antd';
+import { Pagination } from 'antd';
 import Title from 'antd/es/typography/Title';
 import styled from 'styled-components';
 import { useGetPostsQuery } from '../models/api';
 import { config } from 'pages/config';
-import { PostCardContainer } from './PostCardContainer';
+import { Filters } from '../components/Filters';
+import { PostList } from '../components/PostList';
 
 export function PostListContainer() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -57,46 +58,15 @@ export function PostListContainer() {
     <MainContainer>
       <StyledHeader level={1}>Список объявлений</StyledHeader>
       <PostContainer>
-        <LeftPostContainer>
-          <Title level={3}>Поиск по названию</Title>
-          <StyledSearch
-            placeholder='Поиск по названию'
-            allowClear
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <Title level={3}>Поиск по категории</Title>
-          <StyledSelect
-            placeholder='Выберите категорию'
-            allowClear
-            onChange={(value) =>
-              setSelectedTypeCategory(value as string | null)
-            }
-            options={typeCategories.map((category) => ({
-              value: category,
-              label: category,
-            }))}
-          />
-          <StyledButton
-            type='primary'
-            onClick={handleCreatePostClick}
-          >
-            Разместить объявление
-          </StyledButton>
-        </LeftPostContainer>
-        <RightPostContainer>
-          <StyledList>
-            {getCurrentPagePosts().length ? (
-              getCurrentPagePosts().map((post) => (
-                <PostCardContainer
-                  post={post}
-                  key={post.id}
-                />
-              ))
-            ) : (
-              <Empty />
-            )}
-          </StyledList>
-        </RightPostContainer>
+        <Filters
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          selectedTypeCategory={selectedTypeCategory}
+          setSelectedTypeCategory={setSelectedTypeCategory}
+          typeCategories={typeCategories}
+          onCreatePost={handleCreatePostClick}
+        />
+        <PostList posts={getCurrentPagePosts()} />
       </PostContainer>
       <Pagination
         current={currentPage}
@@ -128,50 +98,5 @@ const PostContainer = styled.div`
 
   @media (max-width: 1024px) {
     flex-direction: column;
-  }
-`;
-
-const LeftPostContainer = styled.div`
-  flex: 1;
-  flex-direction: column;
-  flex-basis: 35%;
-  display: flex;
-  align-items: center;
-  align-self: flex-start;
-
-  @media (max-width: 1024px) {
-    flex-basis: 100%;
-    align-self: unset;
-    margin-bottom: 40px;
-  }
-`;
-
-const RightPostContainer = styled.div`
-  flex: 1;
-  flex-basis: 65%;
-
-  @media (max-width: 1024px) {
-    flex-basis: 100%;
-  }
-`;
-
-const StyledSearch = styled(Input.Search)`
-  width: 100%;
-  margin-bottom: 20px;
-`;
-
-const StyledSelect = styled(Select)`
-  width: 100%;
-  margin-bottom: 20px;
-`;
-
-const StyledButton = styled(Button)`
-  width: 100%;
-`;
-
-const StyledList = styled.ul`
-  @media (max-width: 1024px) {
-    padding: 0;
-    margin: 0 auto;
   }
 `;

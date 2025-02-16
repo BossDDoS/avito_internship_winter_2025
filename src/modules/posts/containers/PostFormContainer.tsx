@@ -1,15 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import {
-  Form,
-  Input,
-  Select,
-  InputNumber,
-  Button,
-  message,
-  Modal,
-  FormProps,
-} from 'antd';
+import { Form, Input, Select, Button, message, FormProps } from 'antd';
 import Title from 'antd/es/typography/Title';
 import styled from 'styled-components';
 import {
@@ -19,6 +10,9 @@ import {
 } from '../models/api';
 import { config } from 'pages/config';
 import { Post } from '../models/types';
+import { FormButtons } from './FormButtons';
+import CategoryFields from './CategoryFields';
+import SuccessModal from './../components/SuccessModal';
 
 const { Option } = Select;
 const DRAFT_KEY = 'post_form_draft';
@@ -158,175 +152,18 @@ export function PostFormContainer() {
           </Select>
         </Form.Item>
 
-        {category === 'Недвижимость' && (
-          <>
-            <Form.Item
-              label='Тип недвижимости'
-              name='propertyType'
-              rules={[
-                {
-                  required: true,
-                  message: 'Пожалуйста, выберите тип недвижимости!',
-                },
-              ]}
-            >
-              <Select>
-                <Option value='Квартира'>Квартира</Option>
-                <Option value='Дом'>Дом</Option>
-                <Option value='Коттедж'>Коттедж</Option>
-              </Select>
-            </Form.Item>
+        <CategoryFields category={category} />
 
-            <Form.Item
-              label='Площадь (кв. м)'
-              name='area'
-              rules={[
-                { required: true, message: 'Пожалуйста, введите площадь!' },
-              ]}
-            >
-              <InputNumber min={0} />
-            </Form.Item>
-
-            <Form.Item
-              label='Количество комнат'
-              name='rooms'
-              rules={[
-                {
-                  required: true,
-                  message: 'Пожалуйста, введите количество комнат!',
-                },
-              ]}
-            >
-              <InputNumber min={0} />
-            </Form.Item>
-
-            <Form.Item
-              label='Цена'
-              name='price'
-              rules={[{ required: true, message: 'Пожалуйста, введите цену!' }]}
-            >
-              <InputNumber min={0} />
-            </Form.Item>
-          </>
-        )}
-
-        {category === 'Авто' && (
-          <>
-            <Form.Item
-              label='Марка'
-              name='brand'
-              rules={[
-                { required: true, message: 'Пожалуйста, выберите марку!' },
-              ]}
-            >
-              <Select>
-                <Option value='Toyota'>Toyota</Option>
-                <Option value='Honda'>Honda</Option>
-                <Option value='Ford'>Ford</Option>
-              </Select>
-            </Form.Item>
-
-            <Form.Item
-              label='Модель'
-              name='model'
-              rules={[
-                { required: true, message: 'Пожалуйста, введите модель!' },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.Item
-              label='Год выпуска'
-              name='year'
-              rules={[
-                { required: true, message: 'Пожалуйста, введите год выпуска!' },
-              ]}
-            >
-              <InputNumber
-                min={1900}
-                max={new Date().getFullYear()}
-              />
-            </Form.Item>
-
-            <Form.Item
-              label='Пробег (км)'
-              name='mileage'
-            >
-              <InputNumber min={0} />
-            </Form.Item>
-          </>
-        )}
-
-        {category === 'Услуги' && (
-          <>
-            <Form.Item
-              label='Тип услуги'
-              name='serviceType'
-              rules={[
-                { required: true, message: 'Пожалуйста, выберите тип услуги!' },
-              ]}
-            >
-              <Select>
-                <Option value='Ремонт'>Ремонт</Option>
-                <Option value='Уборка'>Уборка</Option>
-                <Option value='Доставка'>Доставка</Option>
-              </Select>
-            </Form.Item>
-
-            <Form.Item
-              label='Опыт работы (лет)'
-              name='experience'
-              rules={[
-                { required: true, message: 'Пожалуйста, введите опыт работы!' },
-              ]}
-            >
-              <InputNumber min={0} />
-            </Form.Item>
-
-            <Form.Item
-              label='Стоимость'
-              name='cost'
-              rules={[
-                { required: true, message: 'Пожалуйста, введите стоимость!' },
-              ]}
-            >
-              <InputNumber min={0} />
-            </Form.Item>
-
-            <Form.Item
-              label='График работы'
-              name='workSchedule'
-            >
-              <Input />
-            </Form.Item>
-          </>
-        )}
-
-        <StyledButtons>
-          <Button
-            type='primary'
-            htmlType='submit'
-          >
-            {isEditing ? 'Сохранить изменения' : 'Создать объявление'}
-          </Button>
-          {isEditing ? null : (
-            <Button
-              type='default'
-              onClick={clearDraft}
-            >
-              Очистить
-            </Button>
-          )}
-        </StyledButtons>
+        <FormButtons
+          isEditing={isEditing}
+          clearDraft={clearDraft}
+        />
       </StyledForm>
-      <Modal
-        open={isSuccessModalOpen}
-        footer={null}
-        closable={false}
-      >
-        <p>Ваш пост успешно {isEditing ? 'обновлен' : 'добавлен'}!</p>
-      </Modal>
+
+      <SuccessModal
+        isOpen={isSuccessModalOpen}
+        isEditing={isEditing}
+      />
     </CenteredContainer>
   );
 }
@@ -350,14 +187,4 @@ const StyledForm = styled(Form)<FormProps<Post>>`
 
 const StyledBackButton = styled(Button)`
   margin-bottom: 20px;
-`;
-
-const StyledButtons = styled.div`
-  display: flex;
-  justify-content: space-between;
-
-  @media (max-width: 600px) {
-    flex-direction: column;
-    gap: 20px;
-  }
 `;

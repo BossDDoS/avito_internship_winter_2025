@@ -1,22 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { Button, Card, message, Modal } from 'antd';
 import {
   useDeletePostMutation,
   useGetPostsQuery,
   useLazyGetPostQuery,
 } from '../models/api';
-import { Button, Card, message, Modal } from 'antd';
 import { config } from 'pages/config';
 
 export function PostContainer() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
   const { slug } = useParams<{ slug: string }>();
   const [triggerGetPost, { data: post, isLoading, isError }] =
     useLazyGetPostQuery();
   const [deletePost] = useDeletePostMutation();
   const { refetch } = useGetPostsQuery();
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (slug) {

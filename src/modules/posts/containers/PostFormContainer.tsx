@@ -1,30 +1,31 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Form, Input, Select, InputNumber, Button, message, Modal } from 'antd';
-import { Post } from '../models/types';
+import Title from 'antd/es/typography/Title';
 import {
   useAddPostMutation,
   useGetPostsQuery,
   useUpdatePostMutation,
 } from '../models/api';
-import { useLocation, useNavigate } from 'react-router-dom';
 import { config } from 'pages/config';
-import Title from 'antd/es/typography/Title';
+import { Post } from '../models/types';
 
 const { Option } = Select;
 const DRAFT_KEY = 'post_form_draft';
 
 export function PostFormContainer() {
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [category, setCategory] = useState<string>('');
+  const [isEditing, setIsEditing] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [form] = Form.useForm<Post>();
-  const [category, setCategory] = useState<string>('');
   const { refetch } = useGetPostsQuery();
   const [addPost] = useAddPostMutation();
   const [updatePost] = useUpdatePostMutation();
-  const [isEditing, setIsEditing] = useState(false);
 
   const post = location.state?.post;
+  const listRoute = config.find((route) => route.key === 'list')?.path || '/';
 
   useEffect(() => {
     if (post) {
@@ -81,8 +82,6 @@ export function PostFormContainer() {
     setCategory('');
     message.success('Черновик очищен');
   };
-
-  const listRoute = config.find((route) => route.key === 'list')?.path || '/';
 
   const handleBackClick = () => {
     navigate(listRoute);

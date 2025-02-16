@@ -1,8 +1,8 @@
-import { Button, Card } from 'antd';
-import { Post } from '../models/types';
-import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { Button, Card } from 'antd';
+import styled from 'styled-components';
 import { config } from 'pages/config';
+import { Post } from '../models/types';
 
 export type PostCardContainerProps = {
   post: Post;

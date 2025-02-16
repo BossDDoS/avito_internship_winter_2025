@@ -1,7 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Form, Input, Select, InputNumber, Button, message, Modal } from 'antd';
+import {
+  Form,
+  Input,
+  Select,
+  InputNumber,
+  Button,
+  message,
+  Modal,
+  FormProps,
+} from 'antd';
 import Title from 'antd/es/typography/Title';
+import styled from 'styled-components';
 import {
   useAddPostMutation,
   useGetPostsQuery,
@@ -86,23 +96,23 @@ export function PostFormContainer() {
   };
 
   return (
-    <>
-      <Title>
+    <CenteredContainer>
+      <StyledHeader>
         {isEditing ? 'Редактирование объявления' : 'Создание объявления'}
-      </Title>
-      <Form
+      </StyledHeader>
+      <StyledForm
         form={form}
         layout='vertical'
         onFinish={handleSubmit}
         onValuesChange={handleFormChange}
       >
         {!isEditing ? (
-          <Button
+          <StyledBackButton
             type='primary'
             onClick={handleBackClick}
           >
             К объявлениям
-          </Button>
+          </StyledBackButton>
         ) : (
           <></>
         )}
@@ -293,19 +303,23 @@ export function PostFormContainer() {
           </>
         )}
 
-        <Button
-          type='primary'
-          htmlType='submit'
-        >
-          {isEditing ? 'Сохранить изменения' : 'Создать объявление'}
-        </Button>
-        <Button
-          type='default'
-          onClick={clearDraft}
-        >
-          Очистить
-        </Button>
-      </Form>
+        <StyledButtons>
+          <Button
+            type='primary'
+            htmlType='submit'
+          >
+            {isEditing ? 'Сохранить изменения' : 'Создать объявление'}
+          </Button>
+          {isEditing ? null : (
+            <Button
+              type='default'
+              onClick={clearDraft}
+            >
+              Очистить
+            </Button>
+          )}
+        </StyledButtons>
+      </StyledForm>
       <Modal
         open={isSuccessModalOpen}
         footer={null}
@@ -313,6 +327,37 @@ export function PostFormContainer() {
       >
         <p>Ваш пост успешно {isEditing ? 'обновлен' : 'добавлен'}!</p>
       </Modal>
-    </>
+    </CenteredContainer>
   );
 }
+
+const CenteredContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+`;
+
+const StyledHeader = styled(Title)`
+  text-align: center;
+`;
+
+const StyledForm = styled(Form)<FormProps<Post>>`
+  width: 80%;
+  max-width: 800px;
+`;
+
+const StyledBackButton = styled(Button)`
+  margin-bottom: 20px;
+`;
+
+const StyledButtons = styled.div`
+  display: flex;
+  justify-content: space-between;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    gap: 20px;
+  }
+`;

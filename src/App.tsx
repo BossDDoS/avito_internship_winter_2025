@@ -1,4 +1,3 @@
-import React from 'react';
 import { ReactRouter } from './pages/ReactRouter';
 
 function App() {

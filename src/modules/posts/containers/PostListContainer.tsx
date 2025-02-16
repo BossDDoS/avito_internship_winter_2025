@@ -54,40 +54,50 @@ export function PostListContainer() {
   if (!posts) return <div>Error loading posts</div>;
 
   return (
-    <StyledContainer>
-      <Title level={2}>Список объявлений</Title>
-      <Input.Search
-        placeholder='Поиск по названию'
-        allowClear
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
-      <Select
-        placeholder='Выберите категорию'
-        allowClear
-        onChange={(value) => setSelectedTypeCategory(value)}
-        options={typeCategories.map((category) => ({
-          value: category,
-          label: category,
-        }))}
-      />
-      <Button
-        type='primary'
-        onClick={handleCreatePostClick}
-      >
-        Разместить объявление
-      </Button>
-      <StyledList>
-        {getCurrentPagePosts().length ? (
-          getCurrentPagePosts().map((post) => (
-            <PostCardContainer
-              post={post}
-              key={post.id}
-            />
-          ))
-        ) : (
-          <Empty />
-        )}
-      </StyledList>
+    <MainContainer>
+      <StyledHeader level={1}>Список объявлений</StyledHeader>
+      <PostContainer>
+        <LeftPostContainer>
+          <Title level={3}>Поиск по названию</Title>
+          <StyledSearch
+            placeholder='Поиск по названию'
+            allowClear
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <Title level={3}>Поиск по категории</Title>
+          <StyledSelect
+            placeholder='Выберите категорию'
+            allowClear
+            onChange={(value) =>
+              setSelectedTypeCategory(value as string | null)
+            }
+            options={typeCategories.map((category) => ({
+              value: category,
+              label: category,
+            }))}
+          />
+          <StyledButton
+            type='primary'
+            onClick={handleCreatePostClick}
+          >
+            Разместить объявление
+          </StyledButton>
+        </LeftPostContainer>
+        <RightPostContainer>
+          <StyledList>
+            {getCurrentPagePosts().length ? (
+              getCurrentPagePosts().map((post) => (
+                <PostCardContainer
+                  post={post}
+                  key={post.id}
+                />
+              ))
+            ) : (
+              <Empty />
+            )}
+          </StyledList>
+        </RightPostContainer>
+      </PostContainer>
       <Pagination
         current={currentPage}
         pageSize={pageSize}
@@ -95,15 +105,73 @@ export function PostListContainer() {
         onChange={handlePageChange}
         showSizeChanger={false}
       />
-    </StyledContainer>
+    </MainContainer>
   );
 }
 
-const StyledContainer = styled.div`
-  padding: 20px;
+const MainContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
+const StyledHeader = styled(Title)`
+  text-align: center;
+`;
+
+const PostContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 80%;
+  margin: 0 auto;
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+  }
+`;
+
+const LeftPostContainer = styled.div`
+  flex: 1;
+  flex-direction: column;
+  flex-basis: 35%;
+  display: flex;
+  align-items: center;
+  align-self: flex-start;
+
+  @media (max-width: 1024px) {
+    flex-basis: 100%;
+    align-self: unset;
+    margin-bottom: 40px;
+  }
+`;
+
+const RightPostContainer = styled.div`
+  flex: 1;
+  flex-basis: 65%;
+
+  @media (max-width: 1024px) {
+    flex-basis: 100%;
+  }
+`;
+
+const StyledSearch = styled(Input.Search)`
+  width: 100%;
+  margin-bottom: 20px;
+`;
+
+const StyledSelect = styled(Select)`
+  width: 100%;
+  margin-bottom: 20px;
+`;
+
+const StyledButton = styled(Button)`
+  width: 100%;
 `;
 
 const StyledList = styled.ul`
-  padding: 0;
-  margin: 0 auto;
+  @media (max-width: 1024px) {
+    padding: 0;
+    margin: 0 auto;
+  }
 `;

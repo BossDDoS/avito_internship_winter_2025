@@ -52,7 +52,7 @@ const StyledCard = styled(Card)`
 
 const StyledImage = styled.img`
   width: 100%;
-  height: 200px;
+  height: 300px;
   padding: 20px;
   object-fit: cover;
 `;

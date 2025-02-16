@@ -16,7 +16,10 @@
     "isolatedModules": false,
     "noEmit": true,
     "jsx": "react-jsx",
-    "baseUrl": "src"
+    "baseUrl": "src",
+    "paths": {
+      "react-router-dom": ["node_modules/react-router-dom"]
+    }
   },
   "include": ["src"]
 }

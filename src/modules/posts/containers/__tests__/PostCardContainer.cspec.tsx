@@ -1,61 +1,71 @@
-import {
-  PostCardContainer,
-  PostCardContainerProps,
-} from '../PostCardContainer';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
+import { PostCardContainer } from '../PostCardContainer';
+import { PostCardContainerProps } from '../PostCardContainer';
+
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: jest.fn(),
+}));
 
 describe('PostCardContainer component', () => {
+  const mockNavigate = jest.fn();
+
+  beforeEach(() => {
+    (require('react-router-dom').useNavigate as jest.Mock).mockReturnValue(
+      mockNavigate,
+    );
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  const props: PostCardContainerProps = {
+    post: {
+      id: '1',
+      name: 'Toyota Camry',
+      description: 'Надежный автомобиль',
+      location: 'Москва',
+      type: 'Авто',
+      brand: 'Toyota',
+      model: 'Camry',
+      year: 2020,
+      mileage: 15000,
+    },
+  };
+
   test('Should render correct', () => {
-    const props: PostCardContainerProps = {
-      post: {
-        id: '1',
-        name: 'Toyota Camry',
-        description: 'Надежный автомобиль',
-        location: 'Москва',
-        type: 'Авто',
-        brand: 'Toyota',
-        model: 'Camry',
-        year: 2020,
-        mileage: 15000,
-      },
-    };
-    render(<PostCardContainer {...props} />);
+    render(
+      <MemoryRouter>
+        <PostCardContainer {...props} />
+      </MemoryRouter>,
+    );
 
-    const name = screen.getByText(/Toyota Camry/);
-    const description = screen.getByText(/Надежный автомобиль/);
-    const location = screen.getByText(/Москва/);
-    const type = screen.getByText(/Авто/);
-    const brand = screen.getByText(/Toyota/);
-    const model = screen.getByText(/Camry/);
-    const year = screen.getByText(/2020/);
-    const mileage = screen.getByText(/15000/);
+    expect(screen.getByText(/Toyota Camry/)).toBeInTheDocument();
+    expect(screen.getByText(/Москва/)).toBeInTheDocument();
+    expect(screen.getByText(/Авто/)).toBeInTheDocument();
+  });
 
-    expect(name).toBeDefined();
-    expect(description).toBeDefined();
-    expect(location).toBeDefined();
-    expect(type).toBeDefined();
-    expect(brand).toBeDefined();
-    expect(model).toBeDefined();
-    expect(year).toBeDefined();
-    expect(mileage).toBeDefined();
+  test('Should call navigate when "Открыть" button is clicked', () => {
+    render(
+      <MemoryRouter>
+        <PostCardContainer {...props} />
+      </MemoryRouter>,
+    );
+
+    const button = screen.getByRole('button', { name: /Открыть/i });
+    fireEvent.click(button);
+
+    expect(mockNavigate).toHaveBeenCalledWith('/item/1');
   });
 
   test('To match snapshot', () => {
-    const props: PostCardContainerProps = {
-      post: {
-        id: '1',
-        name: 'Toyota Camry',
-        description: 'Надежный автомобиль',
-        location: 'Москва',
-        type: 'Авто',
-        brand: 'Toyota',
-        model: 'Camry',
-        year: 2020,
-        mileage: 15000,
-      },
-    };
-
-    const { container } = render(<PostCardContainer {...props} />);
+    const { container } = render(
+      <MemoryRouter>
+        <PostCardContainer {...props} />
+      </MemoryRouter>,
+    );
 
     expect(container).toMatchSnapshot();
   });

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Form, Input, Select, Button, message, FormProps } from 'antd';
+import { Form, message } from 'antd';
 import Title from 'antd/es/typography/Title';
 import styled from 'styled-components';
 import {
@@ -8,13 +8,10 @@ import {
   useGetPostsQuery,
   useUpdatePostMutation,
 } from '../models/api';
-import { config } from 'pages/config';
 import { Post } from '../models/types';
-import { FormButtons } from './FormButtons';
-import CategoryFields from './CategoryFields';
-import SuccessModal from './../components/SuccessModal';
+import { SuccessModal } from './../components/SuccessModal';
+import { PostForm } from '../components/PostForm';
 
-const { Option } = Select;
 const DRAFT_KEY = 'post_form_draft';
 
 export function PostFormContainer() {
@@ -29,7 +26,6 @@ export function PostFormContainer() {
   const [updatePost] = useUpdatePostMutation();
 
   const post = location.state?.post;
-  const listRoute = config.find((route) => route.key === 'list')?.path || '/';
 
   useEffect(() => {
     if (post) {
@@ -54,7 +50,7 @@ export function PostFormContainer() {
     localStorage.setItem(DRAFT_KEY, JSON.stringify(form.getFieldsValue()));
   };
 
-  const handleSubmit = async (values: Post) => {
+  const handleFormSubmit = async (values: Post) => {
     try {
       if (isEditing && String(post?.id)) {
         await updatePost({ id: post.id, data: values }).unwrap();
@@ -85,80 +81,21 @@ export function PostFormContainer() {
     message.success('Черновик очищен');
   };
 
-  const handleBackClick = () => {
-    navigate(listRoute);
-  };
-
   return (
     <CenteredContainer>
       <StyledHeader>
         {isEditing ? 'Редактирование объявления' : 'Создание объявления'}
       </StyledHeader>
-      <StyledForm
+
+      <PostForm
         form={form}
-        layout='vertical'
-        onFinish={handleSubmit}
-        onValuesChange={handleFormChange}
-      >
-        {!isEditing ? (
-          <StyledBackButton
-            type='primary'
-            onClick={handleBackClick}
-          >
-            К объявлениям
-          </StyledBackButton>
-        ) : (
-          <></>
-        )}
-
-        <Form.Item
-          label='Название'
-          name='name'
-          rules={[{ required: true, message: 'Пожалуйста, введите название!' }]}
-        >
-          <Input />
-        </Form.Item>
-
-        <Form.Item
-          label='Описание'
-          name='description'
-          rules={[{ required: true, message: 'Пожалуйста, введите описание!' }]}
-        >
-          <Input.TextArea />
-        </Form.Item>
-
-        <Form.Item
-          label='Локация'
-          name='location'
-          rules={[{ required: true, message: 'Пожалуйста, введите локацию!' }]}
-        >
-          <Input />
-        </Form.Item>
-
-        <Form.Item
-          label='Категория'
-          name='type'
-          rules={[
-            { required: true, message: 'Пожалуйста, выберите категорию!' },
-          ]}
-        >
-          <Select
-            onChange={(value) => setCategory(value)}
-            value={category}
-          >
-            <Option value='Недвижимость'>Недвижимость</Option>
-            <Option value='Авто'>Авто</Option>
-            <Option value='Услуги'>Услуги</Option>
-          </Select>
-        </Form.Item>
-
-        <CategoryFields category={category} />
-
-        <FormButtons
-          isEditing={isEditing}
-          clearDraft={clearDraft}
-        />
-      </StyledForm>
+        onSubmit={handleFormSubmit}
+        onChange={handleFormChange}
+        isEditing={isEditing}
+        clearDraft={clearDraft}
+        category={category}
+        setCategory={setCategory}
+      />
 
       <SuccessModal
         isOpen={isSuccessModalOpen}
@@ -178,13 +115,4 @@ const CenteredContainer = styled.div`
 
 const StyledHeader = styled(Title)`
   text-align: center;
-`;
-
-const StyledForm = styled(Form)<FormProps<Post>>`
-  width: 80%;
-  max-width: 800px;
-`;
-
-const StyledBackButton = styled(Button)`
-  margin-bottom: 20px;
 `;

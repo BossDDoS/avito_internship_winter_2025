@@ -1,11 +1,10 @@
-import React from 'react';
 import { Form, InputNumber, Select, Input } from 'antd';
 
-interface Props {
+interface CategoryFieldsProps {
   category: string;
 }
 
-const CategoryFields: React.FC<Props> = ({ category }) => {
+export function CategoryFields({ category }: CategoryFieldsProps) {
   if (category === 'Недвижимость') {
     return (
       <>
@@ -152,6 +151,4 @@ const CategoryFields: React.FC<Props> = ({ category }) => {
   }
 
   return null;
-};
-
-export default CategoryFields;
+}

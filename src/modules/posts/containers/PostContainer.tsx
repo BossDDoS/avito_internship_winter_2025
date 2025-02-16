@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Card, message, Modal } from 'antd';
+import Title from 'antd/es/typography/Title';
 import styled from 'styled-components';
 import {
   useDeletePostMutation,
@@ -8,7 +9,6 @@ import {
   useLazyGetPostQuery,
 } from '../models/api';
 import { config } from 'pages/config';
-import Title from 'antd/es/typography/Title';
 
 export function PostContainer() {
   const [isModalOpen, setIsModalOpen] = useState(false);

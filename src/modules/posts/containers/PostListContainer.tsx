@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Empty, Pagination, Input, Select } from 'antd';
 import Title from 'antd/es/typography/Title';
 import styled from 'styled-components';
-import { PostCardContainer } from './PostCardContainer';
 import { useGetPostsQuery } from '../models/api';
 import { config } from 'pages/config';
+import { PostCardContainer } from './PostCardContainer';
 
 export function PostListContainer() {
   const [currentPage, setCurrentPage] = useState(1);

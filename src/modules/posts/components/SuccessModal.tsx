@@ -5,7 +5,7 @@ interface PropsSuccessModal {
   isEditing: boolean;
 }
 
-function SuccessModal({ isOpen, isEditing }: PropsSuccessModal) {
+export function SuccessModal({ isOpen, isEditing }: PropsSuccessModal) {
   return (
     <Modal
       open={isOpen}
@@ -16,5 +16,3 @@ function SuccessModal({ isOpen, isEditing }: PropsSuccessModal) {
     </Modal>
   );
 }
-
-export default SuccessModal;
